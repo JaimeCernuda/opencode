@@ -1,0 +1,21 @@
+[project]
+name = "opencode-tui-adapter"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "crewai",
+    "fastapi",
+    "pydantic",
+    "python-multipart>=0.0.20",
+    "sse-starlette",
+    "uvicorn",
+]
+
+[project.scripts]
+opencode-tui-adapter = "opencode_tui_adapter:main"
+
+[build-system]
+requires = ["uv_build>=0.9.2,<0.10.0"]
+build-backend = "uv_build"
