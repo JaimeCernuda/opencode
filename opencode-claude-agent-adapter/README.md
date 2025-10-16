@@ -24,12 +24,6 @@ OpenCode TUI → FastAPI Server → Claude Agent SDK → Claude API
 
 ```bash
 cd opencode-claude-agent-adapter
-
-# Set API key in environment (Claude Agent SDK uses this automatically)
-export ANTHROPIC_API_KEY=sk-ant-your-api-key-here
-
-# Optional: Create .env file for persistent config
-echo "ANTHROPIC_API_KEY=sk-ant-your-api-key-here" > .env
 ```
 
 ### 2. Install dependencies
