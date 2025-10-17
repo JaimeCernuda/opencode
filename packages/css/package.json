@@ -1,13 +1,18 @@
 {
   "name": "@opencode-ai/css",
-  "version": "0.15.2",
+  "version": "0.15.7",
   "type": "module",
   "exports": {
     ".": "./src/index.css",
-    "./*": "./src/*"
+    "./*": "./src/*",
+    "./fonts/*": "./src/assets/fonts/*"
   },
   "scripts": {
-    "build": "bun run build.ts",
-    "dev": "bun run dev.ts"
+    "dev": "bun run dev.ts",
+    "generate:tailwind": "bun run script/colors.ts"
+  },
+  "dependencies": {
+    "tailwindcss": "catalog:",
+    "@tailwindcss/vite": "catalog:"
   }
 }
