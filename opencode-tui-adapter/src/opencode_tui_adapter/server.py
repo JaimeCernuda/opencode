@@ -16,7 +16,7 @@ from sse_starlette import EventSourceResponse
 import structlog
 import uvicorn
 
-from .config import get_config
+from .config import get_config, get_config_file_path
 from .events.bus import get_event_bus
 from .events.models import Event
 from .logging import setup_logging
@@ -146,6 +146,75 @@ async def get_config_endpoint():
     }
     logger.debug("get_config_result", config=config_data)
     return config_data
+
+
+@app.patch("/config")
+@trace_function
+async def update_config(request: Request):
+    """Update configuration settings."""
+    body = await request.json()
+    logger.info("update_config_request", updates=body)
+
+    try:
+        # Store old values for logging
+        old_theme = config.theme
+        old_log_level = config.log_level
+
+        # Update configuration
+        config.update_from_dict(body)
+
+        # Log changes
+        logger.info(
+            "config_updated",
+            theme_changed=old_theme != config.theme,
+            new_theme=config.theme if old_theme != config.theme else None,
+            log_level_changed=old_log_level != config.log_level,
+            new_log_level=config.log_level if old_log_level != config.log_level else None,
+        )
+
+        # Persist configuration to disk
+        config_file_path = get_config_file_path()
+        config.save_to_yaml(config_file_path)
+        logger.debug("config_saved_to_file", path=str(config_file_path))
+
+        # Broadcast config update event
+        await event_bus.broadcast(Event(
+            type="config.updated",
+            properties={
+                "config": {
+                    "theme": config.theme,
+                    "log_level": config.log_level,
+                }
+            }
+        ))
+
+        # Return updated config
+        config_data = {
+            "theme": config.theme,
+            "share": "disabled",
+            "model": "",
+            "keybinds": {
+                "leader": "ctrl+x"
+            },
+            "tui": {
+                "scrollSpeed": 3
+            }
+        }
+        logger.debug("update_config_success", config=config_data)
+        return config_data
+
+    except ValueError as e:
+        logger.warning("update_config_invalid_value", error=str(e))
+        return JSONResponse(
+            status_code=400,
+            content={"error": str(e)}
+        )
+    except Exception as e:
+        logger.error("update_config_error", error=str(e), exception_type=type(e).__name__)
+        return JSONResponse(
+            status_code=500,
+            content={"error": f"Failed to update configuration: {str(e)}"}
+        )
 
 
 @app.get("/config/providers")

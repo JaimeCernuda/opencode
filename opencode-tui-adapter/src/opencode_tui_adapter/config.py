@@ -103,6 +103,44 @@ class ServerConfig(BaseSettings):
 
         return cls(**data)
 
+    def save_to_yaml(self, path: Path) -> None:
+        """Save configuration to YAML file."""
+        path.parent.mkdir(parents=True, exist_ok=True)
+
+        # Convert config to dict, excluding sensitive data
+        data = {
+            "host": self.host,
+            "port": self.port,
+            "log_level": self.log_level,
+            "theme": self.theme,
+            "state_path": self.state_path,
+            "config_path": self.config_path,
+        }
+
+        with open(path, "w") as f:
+            yaml.dump(data, f, default_flow_style=False)
+
+    def update_theme(self, theme: str) -> None:
+        """Update the theme setting."""
+        if theme not in ["light", "dark", "system"]:
+            raise ValueError(f"Invalid theme: {theme}. Must be one of: light, dark, system")
+        self.theme = theme
+
+    def update_from_dict(self, updates: Dict) -> None:
+        """Update configuration from a dictionary."""
+        # Only update allowed fields
+        allowed_fields = {"theme", "log_level"}
+
+        for key, value in updates.items():
+            if key in allowed_fields:
+                if key == "theme":
+                    self.update_theme(value)
+                elif key == "log_level":
+                    if value.upper() not in ["DEBUG", "INFO", "WARNING", "ERROR"]:
+                        raise ValueError(f"Invalid log_level: {value}")
+                    self.log_level = value.upper()
+            # Silently ignore other fields for forward compatibility
+
 
 # Global configuration instance
 config = ServerConfig()
@@ -111,3 +149,8 @@ config = ServerConfig()
 def get_config() -> ServerConfig:
     """Get the global configuration instance."""
     return config
+
+
+def get_config_file_path() -> Path:
+    """Get the path to the configuration file."""
+    return Path(config.config_path) / "server.yaml"

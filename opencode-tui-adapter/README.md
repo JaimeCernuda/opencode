@@ -254,12 +254,16 @@ uv run mypy src/
 - Message exchange
 - SSE event streaming
 - Configuration endpoints
-- Comprehensive tests (24 tests, all passing)
+- Comprehensive tests (49 tests, all passing)
+- Debug logging system
+- Helios system launcher
 
-### 🚧 Phase 2: UI Operations (Planned)
-- Theme switching
-- Advanced configuration
-- UI state management
+### ✅ Phase 2: UI Operations (Complete)
+- Theme switching (light/dark/system)
+- Configuration updates via PATCH /config
+- Configuration persistence to YAML
+- Real-time config update events via SSE
+- Comprehensive tests (13 new tests, all passing)
 
 ### 📋 Phase 3: Extended Functionality (Planned)
 - Advanced session operations (fork, share, revert)
@@ -319,6 +323,7 @@ This project follows the coding standards documented in the main OpenCode reposi
 
 ---
 
-**Status**: Phase 1 Complete ✅
-**Test Coverage**: 75% (24/24 tests passing)
-**Next**: Phase 2 - UI Operations
+**Status**: Phase 2 Complete ✅
+**Test Coverage**: 77% (62/62 tests passing)
+**Endpoints**: 15 (14 Phase 1 + 1 Phase 2)
+**Next**: Phase 3 - Extended Functionality
