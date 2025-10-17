@@ -1,3 +1,15 @@
+# Ignore everything at the root level
+/*
+
+# EXCEPT: Allow our custom adapter and scripts
+!.gitignore
+!opencode-tui-adapter/
+!rebrand-helios.py
+!HELIOS_QUICKSTART.md
+!CLAUDE.md
+!README.md
+
+# Standard ignores (within allowed directories)
 .DS_Store
 node_modules
 .worktrees
@@ -10,3 +22,7 @@ playground
 tmp
 dist
 .turbo
+__pycache__
+*.pyc
+*.pyo
+.pytest_cache

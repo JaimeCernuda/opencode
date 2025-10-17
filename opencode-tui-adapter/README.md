@@ -23,12 +23,14 @@ cd ../packages/tui/cmd/opencode
 go build -o tui.exe main.go
 
 # Run the TUI pointing to your logging server
-$env:OPENCODE_SERVER="http://localhost:3000"; .\tui.exe
+export OPENCODE_SERVER=http://localhost:3000
+./tui
 ```
 
-Or on Linux/Mac:
-```bash
-OPENCODE_SERVER=http://localhost:3000 ./tui
+Or on Windows PowerShell:
+```powershell
+$env:OPENCODE_SERVER="http://localhost:3000"
+.\tui.exe
 ```
 
 ### 3. Interact with the TUI
@@ -64,16 +66,14 @@ The server logs every request with details:
   }
 }
 
-=€ =€ =€ =€ =€ =€ =€ =€ =€ =€ =€ =€ =€ =€ =€ =€ =€ =€ =€ =€
-=¬ MESSAGE RECEIVED for session: sess_123456
-=€ =€ =€ =€ =€ =€ =€ =€ =€ =€ =€ =€ =€ =€ =€ =€ =€ =€ =€ =€
+MESSAGE RECEIVED for session: sess_123456
 
-=Ë Message Details:
+Message Details:
    Message ID: msg_789
    Agent: test-agent
    Model: test/test-model
 
-=æ Parts (1):
+Parts (1):
    Part 1:
       Type: text
       Text: Hello world
@@ -93,11 +93,11 @@ Once you understand the protocol:
 See `../OPENCODE_ENDPOINTS.md` for full API documentation.
 
 Currently logging:
--  Project endpoints
--  Agent listing
--  Session management
--  Message sending
--  Commands
--  SSE event stream
--  Configuration
--    All other endpoints return empty/dummy responses
+- Project endpoints
+- Agent listing
+- Session management
+- Message sending
+- Commands
+- SSE event stream
+- Configuration
+- All other endpoints return empty/dummy responses
