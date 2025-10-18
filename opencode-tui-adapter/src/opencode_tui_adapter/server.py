@@ -572,9 +572,15 @@ async def event_stream(request: Request):
 @app.get("/command")
 @trace_function
 async def list_commands():
-    """List custom commands."""
-    logger.debug("list_commands_stub")
-    return []
+    """List custom commands - NOT IMPLEMENTED."""
+    logger.warning("list_commands_not_implemented")
+    return JSONResponse(
+        status_code=501,
+        content={
+            "error": "Not Implemented",
+            "message": "Custom slash commands are not yet implemented"
+        }
+    )
 
 
 @app.post("/log")
@@ -610,9 +616,240 @@ async def log_entry(request: Request):
 @app.get("/mcp")
 @trace_function
 async def mcp_status():
-    """Get MCP status."""
-    logger.debug("mcp_status_stub")
-    return {}
+    """Get MCP status - NOT IMPLEMENTED."""
+    logger.warning("mcp_status_not_implemented")
+    return JSONResponse(
+        status_code=501,
+        content={
+            "error": "Not Implemented",
+            "message": "MCP server status endpoints are not yet implemented"
+        }
+    )
+
+
+# ============================================================================
+# TUI CONTROL ENDPOINTS (Not Implemented - bidirectional TUI communication)
+# ============================================================================
+
+@app.post("/tui/append-prompt")
+@trace_function
+async def tui_append_prompt(request: Request):
+    """Append text to TUI prompt - NOT IMPLEMENTED."""
+    logger.warning("tui_append_prompt_not_implemented")
+    return JSONResponse(
+        status_code=501,
+        content={
+            "error": "Not Implemented",
+            "message": "TUI control endpoints are not yet implemented"
+        }
+    )
+
+
+@app.post("/tui/open-help")
+@trace_function
+async def tui_open_help():
+    """Open help dialog in TUI - NOT IMPLEMENTED."""
+    logger.warning("tui_open_help_not_implemented")
+    return JSONResponse(
+        status_code=501,
+        content={
+            "error": "Not Implemented",
+            "message": "TUI control endpoints are not yet implemented"
+        }
+    )
+
+
+@app.post("/tui/open-sessions")
+@trace_function
+async def tui_open_sessions():
+    """Open sessions dialog in TUI - NOT IMPLEMENTED."""
+    logger.warning("tui_open_sessions_not_implemented")
+    return JSONResponse(
+        status_code=501,
+        content={
+            "error": "Not Implemented",
+            "message": "TUI control endpoints are not yet implemented"
+        }
+    )
+
+
+@app.post("/tui/open-themes")
+@trace_function
+async def tui_open_themes():
+    """Open themes dialog in TUI - NOT IMPLEMENTED."""
+    logger.warning("tui_open_themes_not_implemented")
+    return JSONResponse(
+        status_code=501,
+        content={
+            "error": "Not Implemented",
+            "message": "TUI control endpoints are not yet implemented"
+        }
+    )
+
+
+@app.post("/tui/open-models")
+@trace_function
+async def tui_open_models():
+    """Open models dialog in TUI - NOT IMPLEMENTED."""
+    logger.warning("tui_open_models_not_implemented")
+    return JSONResponse(
+        status_code=501,
+        content={
+            "error": "Not Implemented",
+            "message": "TUI control endpoints are not yet implemented"
+        }
+    )
+
+
+@app.post("/tui/submit-prompt")
+@trace_function
+async def tui_submit_prompt():
+    """Submit prompt in TUI - NOT IMPLEMENTED."""
+    logger.warning("tui_submit_prompt_not_implemented")
+    return JSONResponse(
+        status_code=501,
+        content={
+            "error": "Not Implemented",
+            "message": "TUI control endpoints are not yet implemented"
+        }
+    )
+
+
+@app.post("/tui/clear-prompt")
+@trace_function
+async def tui_clear_prompt():
+    """Clear prompt in TUI - NOT IMPLEMENTED."""
+    logger.warning("tui_clear_prompt_not_implemented")
+    return JSONResponse(
+        status_code=501,
+        content={
+            "error": "Not Implemented",
+            "message": "TUI control endpoints are not yet implemented"
+        }
+    )
+
+
+@app.post("/tui/execute-command")
+@trace_function
+async def tui_execute_command(request: Request):
+    """Execute TUI command - NOT IMPLEMENTED."""
+    logger.warning("tui_execute_command_not_implemented")
+    return JSONResponse(
+        status_code=501,
+        content={
+            "error": "Not Implemented",
+            "message": "TUI control endpoints are not yet implemented"
+        }
+    )
+
+
+@app.post("/tui/show-toast")
+@trace_function
+async def tui_show_toast(request: Request):
+    """Show toast notification in TUI - NOT IMPLEMENTED."""
+    logger.warning("tui_show_toast_not_implemented")
+    return JSONResponse(
+        status_code=501,
+        content={
+            "error": "Not Implemented",
+            "message": "TUI control endpoints are not yet implemented"
+        }
+    )
+
+
+@app.get("/tui/control/next")
+@trace_function
+async def tui_control_next():
+    """Get next TUI control request - NOT IMPLEMENTED."""
+    logger.warning("tui_control_next_not_implemented")
+    return JSONResponse(
+        status_code=501,
+        content={
+            "error": "Not Implemented",
+            "message": "TUI control endpoints are not yet implemented"
+        }
+    )
+
+
+@app.post("/tui/control/response")
+@trace_function
+async def tui_control_response(request: Request):
+    """Send response to TUI control request - NOT IMPLEMENTED."""
+    logger.warning("tui_control_response_not_implemented")
+    return JSONResponse(
+        status_code=501,
+        content={
+            "error": "Not Implemented",
+            "message": "TUI control endpoints are not yet implemented"
+        }
+    )
+
+
+# ============================================================================
+# DOCUMENTATION ENDPOINT
+# ============================================================================
+
+@app.get("/doc")
+@trace_function
+async def get_documentation():
+    """Return OpenAPI documentation."""
+    logger.debug("get_documentation")
+
+    # Return basic API documentation
+    return {
+        "openapi": "3.0.0",
+        "info": {
+            "title": "OpenCode TUI Adapter API",
+            "version": "0.1.0",
+            "description": "Backend adapter that connects OpenCode TUI to Claude Agent SDK"
+        },
+        "servers": [
+            {
+                "url": f"http://{config.host}:{config.port}",
+                "description": "Local development server"
+            }
+        ],
+        "paths": {
+            "/project/current": {
+                "get": {
+                    "summary": "Get current project",
+                    "responses": {"200": {"description": "Project information"}}
+                }
+            },
+            "/agent": {
+                "get": {
+                    "summary": "List available agents",
+                    "responses": {"200": {"description": "Array of agents"}}
+                }
+            },
+            "/config": {
+                "get": {
+                    "summary": "Get configuration",
+                    "responses": {"200": {"description": "Configuration object"}}
+                },
+                "patch": {
+                    "summary": "Update configuration",
+                    "responses": {"200": {"description": "Updated configuration"}}
+                }
+            },
+            "/session": {
+                "get": {
+                    "summary": "List all sessions",
+                    "responses": {"200": {"description": "Array of sessions"}}
+                },
+                "post": {
+                    "summary": "Create new session",
+                    "responses": {"200": {"description": "Created session"}}
+                }
+            },
+            "/event": {
+                "get": {
+                    "summary": "Server-Sent Events stream",
+                    "responses": {"200": {"description": "SSE stream"}}
+                }
+            }
+        }
+    }
 
 
 # ============================================================================
