@@ -41,6 +41,51 @@ def check_claude_code_cli():
     sys.exit(1)
 
 
+def check_go_installed():
+    """Check if Go is installed."""
+    try:
+        result = subprocess.run(
+            ["go", "version"],
+            capture_output=True,
+            check=True,
+            text=True,
+        )
+        version = result.stdout.strip()
+        print(f"✅ Go found ({version})")
+        return True
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        print("❌ Go not found")
+        print("\nPlease install Go 1.24.x or higher")
+        sys.exit(1)
+
+
+def build_tui_binary():
+    """Build the OpenCode TUI from Go source."""
+    print("\n🔨 Building OpenCode TUI from source...")
+
+    # Find the TUI source directory (go up from helios.py to opencode-1 root)
+    script_dir = Path(__file__).parent.parent.parent.parent  # 4 levels up
+    tui_dir = script_dir / "packages" / "tui"
+
+    if not tui_dir.exists():
+        print(f"❌ TUI source directory not found: {tui_dir}")
+        sys.exit(1)
+
+    # Build the TUI binary
+    try:
+        subprocess.run(
+            ["go", "build", "-o", "opencode", "./cmd/opencode"],
+            cwd=str(tui_dir),
+            check=True,
+        )
+        binary_path = tui_dir / "opencode"
+        print(f"✅ TUI built successfully: {binary_path}")
+        return binary_path
+    except subprocess.CalledProcessError as e:
+        print(f"❌ Failed to build TUI: {e}")
+        sys.exit(1)
+
+
 def start_backend_server():
     """Start the FastAPI backend server in background."""
     print("\n🚀 Starting backend server...")
@@ -77,22 +122,22 @@ def start_backend_server():
     sys.exit(1)
 
 
-def start_tui_client():
+def start_tui_client(binary_path):
     """Start the OpenCode TUI client."""
     print("\n🎨 Starting OpenCode TUI...")
 
-    # Set server URL for TUI
-    server_url = os.environ.get("OPENCODE_SERVER", "http://127.0.0.1:3000")
-    os.environ["OPENCODE_SERVER"] = server_url
+    # Set server URL for TUI (TUI expects HELIOS_SERVER env var)
+    server_url = os.environ.get("HELIOS_SERVER", "http://127.0.0.1:3000")
+    env = os.environ.copy()
+    env["HELIOS_SERVER"] = server_url
 
-    # Launch TUI (assumes it's in PATH)
+    # Launch TUI
     try:
-        # Try to find opencode TUI binary
-        subprocess.run(["opencode", "tui"], check=True)
-    except FileNotFoundError:
-        print("❌ OpenCode TUI binary not found")
-        print("\nPlease ensure the OpenCode TUI is installed and in your PATH")
-        sys.exit(1)
+        subprocess.run([str(binary_path), "tui"], env=env, check=True)
+    except subprocess.CalledProcessError as e:
+        print(f"❌ TUI exited with error: {e}")
+    except KeyboardInterrupt:
+        print("\n⏸️  TUI interrupted by user")
 
 
 def main():
@@ -105,13 +150,17 @@ def main():
     print("\n📋 Pre-flight checks:")
     check_claude_code_auth()
     check_claude_code_cli()
+    check_go_installed()
+
+    # Build TUI from source
+    tui_binary = build_tui_binary()
 
     # Start backend server
     server_process = start_backend_server()
 
     try:
         # Start TUI client
-        start_tui_client()
+        start_tui_client(tui_binary)
     except KeyboardInterrupt:
         print("\n\n🛑 Shutting down...")
     finally:
