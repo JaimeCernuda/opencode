@@ -85,16 +85,18 @@ uv sync
 # Install dev dependencies (for testing)
 uv sync --extra dev
 
-# Set up environment variables
-export ANTHROPIC_API_KEY="your-api-key"
+# Set up environment variables (optional)
 export OPENCODE_SERVER_HOST="127.0.0.1"
 export OPENCODE_SERVER_PORT="3000"
+
+# Note: No API key needed! claude-agent-sdk uses Claude Code's OAuth authentication
 ```
 
 ## Usage
 
 ### Running the Server
 
+**Option 1: Run backend server only**
 ```bash
 # Run with uv
 uv run opencode-tui-adapter
@@ -104,6 +106,18 @@ uv run python -m opencode_tui_adapter.server
 ```
 
 The server will start on `http://127.0.0.1:3000` by default.
+
+**Option 2: Launch complete system with Helios**
+```bash
+# One-command launcher that starts backend + TUI
+uv run helios
+```
+
+Helios will:
+- ✅ Check prerequisites (API key, Claude Code CLI)
+- 🚀 Start the backend server
+- 🎨 Launch the OpenCode TUI client
+- 🧹 Clean up on exit
 
 ### Configuration
 
@@ -117,7 +131,8 @@ Example `.env`:
 OPENCODE_HOST=127.0.0.1
 OPENCODE_PORT=3000
 OPENCODE_LOG_LEVEL=INFO
-ANTHROPIC_API_KEY=sk-ant-...
+
+# Note: No ANTHROPIC_API_KEY needed - uses Claude Code's OAuth
 ```
 
 ### Debug Logging

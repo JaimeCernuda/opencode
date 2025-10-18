@@ -30,6 +30,7 @@ dev = [
 
 [project.scripts]
 opencode-tui-adapter = "opencode_tui_adapter.server:main"
+helios = "opencode_tui_adapter.helios:main"
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
